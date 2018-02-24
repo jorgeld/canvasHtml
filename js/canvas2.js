@@ -9,7 +9,7 @@ const CONST = {
     RADIO : 3,
     COLOR : 'rgba(255,255,255,',
     COLOR_BORDE : 'rgba(255,255,255,',
-    NUM_BURBUJAS : 1
+    NUM_BURBUJAS : 0
 }
 
 //Objetos para eventos
@@ -24,6 +24,12 @@ var teclado = {
 //Funciones útiles
 function aleatorio(max,min){
     return Math.floor(Math.random() * (max - min) + min);
+}
+function distancia(circulo1,circulo2){
+    return Math.sqrt(
+        Math.pow(circulo1.x - circulo2.x,2) +
+        Math.pow(circulo1.y - circulo2.y,2)
+    )
 }
 
 window.addEventListener('mousemove', function(event){
@@ -57,7 +63,7 @@ window.addEventListener('keypress',function(event){
 
 var circulosL = [];
 
-function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
+function Circulo(x,y,speedX,speedY,radio,angulo,opacidad,color){
     this.x = x;
     this.y = y;
     this.speedX = speedX;
@@ -65,16 +71,19 @@ function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
     this.radio = radio;
     this.angulo = angulo;
     this.opacidad = opacidad;
+    this.color = color
     this.draw = function(){
         c.beginPath();
         c.arc(this.x,this.y, this.radio,this.angulo, Math.PI * 2, false);
         c.strokeStyle = CONST.COLOR_BORDE + this.opacidad+')';
         c.stroke();
-        c.fillStyle = CONST.COLOR + this.opacidad+')';
+        c.fillStyle = this.color + this.opacidad+')';
         c.fill();
     };
-    this.update = function(){
+    //this.update = function(){
 
+//Interactividad
+        /**
         if(this.x + this.radio > innerWidth || this.x - this.radio <= 0){
             this.speedX = -this.speedX;
         }
@@ -86,7 +95,7 @@ function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
         this.y = this.y + this.speedY;
 
 
-        //Interactividad
+
         if( mouse.x - this.x < 50 && mouse.x - this.x > -50
             && mouse.y - this.y < 50 && mouse.y - this.y > -50  ){
 
@@ -96,14 +105,49 @@ function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
         }else if(this.radio > CONST.RADIO){
             this.radio -= 1
         }
+         **/
 
-        this.draw();
-    }
+        //this.draw();
+    //}
+}
+var circulo_movimiento = new Circulo(100,100,0,0,20,0,1,'rgba(255,255,255,');
+circulo_movimiento.update = function(){
+    this.x = mouse.x;
+    this.y = mouse.y;
+    circulo_movimiento.draw();
 }
 
+var circulo_estatico = new Circulo(500,500,0,0,150,0,1,'rgba(255,255,255,');
+    circulo_estatico.update = function(){
+
+
+        if(distancia(circulo_estatico,circulo_movimiento) <= (circulo_estatico.radio + circulo_movimiento.radio) ){
+            circulo_estatico.color = 'rgba(255,255,0,'
+        }else{
+            circulo_estatico.color = 'rgba(255,255,255,'
+        }
+
+
+
+/**
+
+        if(circulo_estatico.x < circulo_movimiento.x){
+
+        }else{
+
+        }
+**/
+        circulo_estatico.draw();
+    }
+
+
+
+
+
+/**
 for(var i = 0; i < CONST.NUM_BURBUJAS ; i++){
 
-    var circulo = new Ciculo(
+    var circulo = new Circulo(
         Math.random() * window.innerWidth,
         Math.random() * window.innerHeight,
         aleatorio(3,0.50),
@@ -114,6 +158,7 @@ for(var i = 0; i < CONST.NUM_BURBUJAS ; i++){
     );
     circulosL.push(circulo);
 }
+ **/
 
 
 
@@ -122,9 +167,14 @@ function animate(){
     requestAnimationFrame(animate);
     c.clearRect(0,0,innerWidth,innerHeight);
 
+
+    circulo_estatico.update();
+    circulo_movimiento.update();
+    /**
     for(var i = 0; i < circulosL.length; i++){
         circulosL[i].update();
     }
+     **/
 
 }
 
