@@ -1,19 +1,29 @@
 var canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// canvas.width = window.screen.availWidth;
-// canvas.height = window.screen.availHeight;
 
 var c = canvas.getContext('2d');
 
+//Constantes
+const CONST = {
+    RADIO : 3,
+    COLOR : 'rgba(255,255,255,',
+    COLOR_BORDE : 'rgba(255,255,255,'
+}
+
+//Objetos para eventos
 var mouse = {
     x : undefined,
     y : undefined
 };
-
 var teclado = {
     tecla : undefined
 };
+
+//Funciones útiles
+function aleatorio(max,min){
+    return Math.floor(Math.random() * (max - min) + min);
+}
 
 window.addEventListener('mousemove', function(event){
     mouse.x = event.x;
@@ -29,12 +39,11 @@ window.addEventListener('keypress',function(event){
         case ' ' :
             x = Math.random() * window.innerWidth;
             y = Math.random() * window.innerHeight;
-            speedX = Math.random() * (3 - 0.50) + 0.50;
-            speedY = Math.random() * (3 - 0.50) + 0.50;
-
+            speedX = aleatorio(3,0.50);
+            speedY = aleatorio(3,0.50);
 
             //radio = Math.random() * (3 - 6) + 6;
-            radio = 3;
+            radio = CONST.RADIO;
             opacidad = Math.random() * (0.50 - 0.05) + 0.05;
 
             var circulo = new Ciculo(x,y,speedX,speedY,radio,0,opacidad);
@@ -58,9 +67,9 @@ function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
     this.draw = function(){
         c.beginPath();
         c.arc(this.x,this.y, this.radio,this.angulo, Math.PI * 2, false);
-        c.strokeStyle = 'rgba(255,255,255,'+this.opacidad+')';
+        c.strokeStyle = CONST.COLOR_BORDE + this.opacidad+')';
         c.stroke();
-        c.fillStyle = 'rgba(255,255,255,'+this.opacidad+')';
+        c.fillStyle = CONST.COLOR + this.opacidad+')';
         c.fill();
     };
     this.update = function(){
@@ -83,7 +92,7 @@ function Ciculo(x,y,speedX,speedY,radio,angulo,opacidad){
             if(this.radio < 20){
                 this.radio += 1;
             }
-        }else if(this.radio > 3){
+        }else if(this.radio > CONST.RADIO){
             this.radio -= 1
         }
 
@@ -102,8 +111,8 @@ for(var i = 0; i < 1; i++){
 
     x = Math.random() * window.innerWidth;
     y = Math.random() * window.innerHeight;
-    speedX = Math.random() * (3 - 0.50) + 0.50;
-    speedY = Math.random() * (3 - 0.50) + 0.50;
+    speedX = aleatorio(3,0.50);
+    speedY = aleatorio(3,0.50);
 
 
     //radio = Math.random() * (3 - 6) + 6;
@@ -130,38 +139,4 @@ function animate(){
 }
 
 animate();
-
-
-
-
-
-
-// //1. Modify Settings
-// canvas.font = '30px Arial';
-// canvas.fillStyle = 'red';
-// // canvas.width = window.innerWidth;
-// // canvas.height = window.innerHeight;
-// canvas.globalAlpha = opacity;
-//
-// setInterval(update,1);
-//
-// function update() {
-//     x += speedX;
-//     y += speedY;
-//     canvas.fillText('-',x,y); //(text,x,y)
-//
-//     if(x > 500){
-//         speedX = -15;
-//         opacity -= 0.10;
-//         canvas.globalAlpha = opacity;
-//     }
-//
-//     if(x < 0){
-//         speedX = 15;
-//         opacity -= 0.10;
-//         canvas.globalAlpha = opacity;
-//     }
-//
-//
-// }
 
